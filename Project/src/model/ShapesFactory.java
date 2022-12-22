@@ -3,10 +3,11 @@ package model;
 
 import eg.edu.alexu.csd.oop.game.GameObject;
 
-public abstract class Shape implements GameObject {
+public abstract class ShapesFactory implements GameObject {
 
     private int x, y, width, height;
-    boolean visible; 
+    boolean visible;
+    Shapes shape;
     
     @Override
     public int getX() {
