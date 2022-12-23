@@ -7,27 +7,27 @@ import javax.imageio.ImageIO;
 
 public class PlateObject extends Shapes {
 
+    private int x,y;
     private static final int MAX_MSTATE = 100;
     private String picpath;
-    private BufferedImage[] spriteImage;
+    private BufferedImage[] spriteImages = new BufferedImage[MAX_MSTATE];
 
-    public PlateObject() {
-        this.spriteImage = new BufferedImage[MAX_MSTATE];
-        /*
-        Set picpath to choose random plate pic from array of path
-         */
-        if (picpath != null) {
-            try {
-                spriteImage[0] = ImageIO.read(new File(picpath));
-
-            } catch (IOException ex) {
-                System.out.println("Can't load Plate pics");
-            }
-        }
-    }
-
+    public PlateObject(int posX, int posY, String path){
+		this.x = posX;
+		this.y = posY;
+		this.visible = true;
+		// create a bunch of buffered images and place into an array, to be displayed sequentially
+		try {
+			spriteImages[0] = ImageIO.read(getClass().getResourceAsStream(path));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+    
+    
+    
     @Override
     public BufferedImage[] getSpriteImages() {
-        return spriteImage;
+        return spriteImages;
     }
 }
