@@ -28,10 +28,10 @@ public class Game implements World {
 		width = screenWidth;
 		height = screenHeight;
 		// control objects (hero)
-		//control.add(new PlateObject(screenWidth/3, (int)(screenHeight*0.8), ""));
+		control.add(new PlateObject(20, 10, "C:/Users/omari/Project/Project/src/star.png"));
 		// moving objects (enemy)
-		for(int i=0; i<10; i++)
-			moving.add(new PlateObject((int)(Math.random() * screenWidth), -1 * (int)(Math.random() * screenHeight), "/star.png"));
+//		for(int i=0; i<10; i++)
+//			moving.add(new PlateObject(20, 10, "C:/Users/omari/Project/Project/src/star.png"));
 		// constants objects (gold)
 		//for(int i=0; i<5; i++)
 			//constant.add(new PlateObject((int)(screenWidth*0.9*Math.random()), (int)(screenHeight*0.9*Math.random()), "/astronaut.png"));
@@ -42,19 +42,19 @@ public class Game implements World {
 	@Override
 	public boolean refresh() {
 		boolean timeout = System.currentTimeMillis() - startTime > MAX_TIME; // time end and game over
-		//GameObject  = control.get(0);
+		GameObject PlateObject  = control.get(0);
 		// moving starts
-		for(GameObject m : moving){
-			m.setY((m.getY() + 1));
-			if(m.getY()==getHeight()){
-				// reuse the star in another position
-				m.setY(-1 * (int)(Math.random() * getHeight()));
-				m.setX((int)(Math.random() * getWidth()));	
-			}
-			m.setX(m.getX() + (Math.random() > 0.5 ? 1 : -1));
-			if(!timeout & intersect(m, null))
-				score = Math.max(0, score-10);	// lose score
-		}
+//		for(GameObject m : moving){
+//			m.setY((m.getY() + 1));
+//			if(m.getY()==getHeight()){
+//				// reuse the star in another position
+//				m.setY(-1 * (int)(Math.random() * getHeight()));
+//				m.setX((int)(Math.random() * getWidth()));	
+//			}
+//			m.setX(m.getX() + (Math.random() > 0.5 ? 1 : -1));
+//			if(!timeout & intersect(m, null))
+//				score = Math.max(0, score-10);	// lose score
+//		}
 		// collecting astronauts
 		return !timeout;
 	}

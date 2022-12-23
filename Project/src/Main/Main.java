@@ -12,7 +12,7 @@ public class Main{
 public static void main(String[] args) {
     
     GameEngine.start("Very Simple Game in 99 Line of Code", new Game(600, 600));
-    
+    System.out.println("Hello world");
     
     
     
