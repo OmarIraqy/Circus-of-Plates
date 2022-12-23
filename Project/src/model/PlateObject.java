@@ -28,9 +28,6 @@ public class PlateObject implements Shapes,GameObject {
     public BufferedImage[] getSpriteImages() {
         return spriteImages;
     }
-<<<<<<< HEAD
-}
-=======
 
     @Override
     public int getX() {
@@ -67,4 +64,4 @@ public class PlateObject implements Shapes,GameObject {
         return visible;
     }
 }
->>>>>>> 276e674a69e9940708b2a1404a4a989e512b59ae
+
