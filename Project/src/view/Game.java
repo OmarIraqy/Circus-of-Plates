@@ -28,7 +28,7 @@ public class Game implements World {
         shapes[0] = "RedPlate";
         shapes[1] = "GreenPlate";
 // control objects 
-        control.add(new PlateObject(screenWidth / 2, (int) (screenHeight * 0.85), "C:/Users/Blu-Ray/OneDrive/Desktop/Plates/special.png", 1));
+        control.add(new PlateObject(screenWidth / 2, (int) (screenHeight * 0.85), "./images/special.png", 1));
 // moving objects 
         Random r = new Random();
         for (int i = 0; i < 10; i++) {
