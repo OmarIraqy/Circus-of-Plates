@@ -8,6 +8,5 @@ public class Main {
     public static void main(String[] args) {
 
         GameEngine.start("Test Game", new Game(600, 600));
-
     }
 }
