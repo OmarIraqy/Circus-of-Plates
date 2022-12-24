@@ -4,10 +4,23 @@
  */
 package controller;
 
-/**
- *
- * @author Blu-Ray
- */
+import eg.edu.alexu.csd.oop.game.GameObject;
+
 public class GameController {
-    
+
+    private int screenWidth;
+    private int screenHeight;
+
+    public GameController(int screenWidth, int screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+    }
+
+    public void update(GameObject m) {
+        if (m.getY() > screenHeight) {
+            m.setY(-1 * (int) (Math.random() * screenHeight));
+            m.setX((int) (Math.random() * screenWidth));
+        }
+    }
+
 }

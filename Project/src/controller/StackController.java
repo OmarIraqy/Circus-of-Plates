@@ -7,14 +7,21 @@ import model.*;
 public class StackController {
 
     private int screenWidth;
-    private int screenheight;
+    private int screenHeight;
     private GameObject clown;
     private Stack<GameObject> stack = new Stack<>();
 
-    public StackController(int screenWidth, int screenheight, GameObject clown) {
+    public StackController(int screenWidth, int screenHeight, GameObject clown) {
         this.screenWidth = screenWidth;
-        this.screenheight = screenheight;
+        this.screenHeight = screenHeight;
         this.clown = clown;
+    }
+
+    public void update(GameObject o) {
+        if (stack.search(o) == -1) {
+            o.setY((o.getY() + 1));
+        }
+        refactorShapes();
     }
 
     public void addToStack(GameObject o) {
@@ -40,9 +47,9 @@ public class StackController {
         }
     }
 
-    public void modifyLast3() {
+    private void modifyLast3() {
         for (int i = 0; i < 3; i++) {
-            stack.peek().setY(-1 * (int) (Math.random() * screenheight));
+            stack.peek().setY(-1 * (int) (Math.random() * screenHeight));
             stack.peek().setX((int) (Math.random() * screenWidth));
             stack.pop();
         }
@@ -58,6 +65,20 @@ public class StackController {
                 return true;
             }
             return false;
+        }
+        return false;
+    }
+    public boolean handleBomb() {
+        for (int i = 0; i < stack.size(); i++) {
+            Shapes object = (Shapes) stack.get(i);
+            if (object.getId() == 3) {
+                for (int j = 0; !stack.isEmpty(); j++) {
+                    stack.peek().setY(-1 * (int) (Math.random() * screenHeight));
+                    stack.peek().setX((int) (Math.random() * screenWidth));
+                    stack.pop();
+                }
+                return true;
+            }
         }
         return false;
     }

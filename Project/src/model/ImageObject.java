@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class ImageObject implements Shapes, GameObject {
-
     private int x, y, id;
     private static final int MAX_MSTATE = 1;
     boolean visible;
