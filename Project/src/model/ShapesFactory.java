@@ -4,11 +4,11 @@ public class ShapesFactory {
 
     Shapes shape;
 
-    public Shapes getShape(String shapeName) {
+    public Shapes getShape(int width,int height, String shapeName) {
         if (shapeName == "GreenPlate") {
-            return new PlateObject(20, 10, "C:/Users/Blu-Ray/OneDrive/Desktop/Plates/test.png");
+            return new PlateObject((int) (Math.random() * (width/2)), -1 * (int) (Math.random() * height), "C:/Users/Blu-Ray/OneDrive/Desktop/Plates/test.png",1);
         } else if (shapeName == "RedPlate") {
-            return new PlateObject(100, 10, "C:/Users/Blu-Ray/OneDrive/Desktop/Plates/test2.png");
+            return new PlateObject((int) (Math.random() *(width/2)), -1 * (int) (Math.random() * height), "C:/Users/Blu-Ray/OneDrive/Desktop/Plates/test2.png",2);
         }
         return null;
     }

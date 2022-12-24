@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package view;
 
 import eg.edu.alexu.csd.oop.game.GameObject;
@@ -9,13 +5,9 @@ import eg.edu.alexu.csd.oop.game.World;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import model.PlateObject;
-import model.ShapesFactory;
+import java.util.Stack;
+import model.*;
 
-/**
- *
- * @author omari
- */
 public class Game implements World {
 
     private static int MAX_TIME = 1 * 60 * 1000;	// 1 minute
@@ -26,8 +18,8 @@ public class Game implements World {
     private final List<GameObject> constant = new LinkedList<GameObject>();
     private final List<GameObject> moving = new LinkedList<GameObject>();
     private final List<GameObject> control = new LinkedList<GameObject>();
-    ShapesFactory factory = new ShapesFactory();
-    Random r = new Random();
+    private ShapesFactory factory = new ShapesFactory();
+    private Stack<GameObject> stack = new Stack<>();
 
     public Game(int screenWidth, int screenHeight) {
         width = screenWidth;
@@ -36,11 +28,11 @@ public class Game implements World {
         shapes[0] = "RedPlate";
         shapes[1] = "GreenPlate";
 // control objects 
-        //control.add(new PlateObject((int) (screenWidth * Math.random()), (int) (screenHeight * Math.random()), "C:/Users/Blu-Ray/OneDrive/Desktop/Plates/test.png"));
+        control.add(new PlateObject(screenWidth / 2, (int) (screenHeight * 0.85), "C:/Users/Blu-Ray/OneDrive/Desktop/Plates/special.png", 1));
 // moving objects 
-
-        for (int i = 0; i < 4; i++) {
-            moving.add((GameObject) factory.getShape(shapes[r.nextInt(shapes.length)]));
+        Random r = new Random();
+        for (int i = 0; i < 10; i++) {
+            moving.add((GameObject) factory.getShape(screenWidth, screenHeight, shapes[r.nextInt(shapes.length)]));
         }
 // constants objects 
         //for(int i=0; i<5; i++)
@@ -54,22 +46,43 @@ public class Game implements World {
     @Override
     public boolean refresh() {
         boolean timeout = System.currentTimeMillis() - startTime > MAX_TIME; // time end and game over
-        // GameObject PlateObject = control.get(0);
+        GameObject special = control.get(0);
         // moving starts
-
         for (GameObject m : moving) {
-            m.setY((m.getY() + 1));
-            //if (m.getY() == getHeight()) {
-            // reuse the star in another position
-            // m.setY(-1 * (int) (Math.random() * getHeight()));
-            //m.setX((int) (Math.random() * getWidth()));
+            if (stack.search(m) == -1) {
+                m.setY((m.getY() + 1));
+            }
+            if (!stack.isEmpty()) {
+                stack.get(0).setX(special.getX());
+                stack.get(0).setY(special.getY() - 2);
+                for (int i = 1; i < stack.size(); i++) {
+                    stack.get(i).setX(stack.get(i - 1).getX());
+                    stack.get(i).setY(stack.get(i - 1).getY() - 10);
+                }
+            }
+            if (stack.size() >= 3) {
+                Shapes object1 = (Shapes) stack.get(stack.size() - 1);
+                Shapes object2 = (Shapes) stack.get(stack.size() - 2);
+                Shapes object3 = (Shapes) stack.get(stack.size() - 3);
+                if (object1.getId() == object2.getId() && object1.getId() == object3.getId()) {
+                    score += 10;
+                    for (int i = 0; i < 3; i++) {
+                        stack.peek().setY(-1 * (int) (Math.random() * getHeight()));
+                        stack.peek().setX((int) (Math.random() * getWidth()));
+                        stack.pop();
+                    }
+                }
+            }
+
+            if (m.getY() == getHeight()) {
+                /* Falling object has reached the ground reuse it */
+                m.setY(-1 * (int) (Math.random() * getHeight()));
+                m.setX((int) (Math.random() * getWidth()));
+            }
+            if (intersect(m, special)) {
+                stack.push(m);
+            }            
         }
-//                  m.setX(m.getX() + (Math.random() > 0.5 ? 1 : -1));
-//        if (!timeout & intersect(m, null)) {
-//                  score = Math.max(0, score - 10);	// lose score
-//            }
-//        }
-//         collecting astronauts
         return !timeout;
     }
 
