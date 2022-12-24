@@ -6,14 +6,14 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class PlateObject implements Shapes, GameObject {
+public class ImageObject implements Shapes, GameObject {
 
     private int x, y, id;
     private static final int MAX_MSTATE = 1;
     boolean visible;
     private BufferedImage[] spriteImages = new BufferedImage[MAX_MSTATE];
 
-    public PlateObject(int posX, int posY, String path, int id) {
+    public ImageObject(int posX, int posY, String path, int id) {
         this.x = posX;
         this.y = posY;
         this.id = id;

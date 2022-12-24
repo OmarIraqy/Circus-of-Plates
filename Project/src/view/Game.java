@@ -10,7 +10,7 @@ import model.*;
 
 public class Game implements World {
 
-    private static int MAX_TIME = 1 * 60 * 1000;	// 1 minute
+    private static int MAX_TIME = 1 * 60 * 10000;	// 1 minute
     private int score = 0;
     private long startTime = System.currentTimeMillis();
     private final int width;
@@ -28,15 +28,19 @@ public class Game implements World {
         shapes[0] = "RedPlate";
         shapes[1] = "GreenPlate";
 // control objects 
-        control.add(new PlateObject(screenWidth / 2, (int) (screenHeight * 0.85), "./images/special.png", 1));
+        control.add(new ImageObject(screenWidth / 2, (int) (screenHeight * 0.85), "./images/special.png", 1));
 // moving objects 
         Random r = new Random();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 15; i++) {
             moving.add((GameObject) factory.getShape(screenWidth, screenHeight, shapes[r.nextInt(shapes.length)]));
         }
+        for (int i = 0; i < 2; i++) {
+            moving.add((GameObject) factory.getShape(screenWidth, screenHeight, "Bomb"));
+        }
 // constants objects 
+        constant.add(new ImageObject(0,0,"./images/theme3.png" , 0));
         //for(int i=0; i<5; i++)
-        //constant.add(new PlateObject((int)(screenWidth*0.9*Math.random()), (int)(screenHeight*0.9*Math.random()), "/astronaut.png"));
+        //constant.add(new ImageObject((int)(screenWidth*0.9*Math.random()), (int)(screenHeight*0.9*Math.random()), "/astronaut.png"));
     }
 
     private boolean intersect(GameObject o1, GameObject o2) {
@@ -73,15 +77,27 @@ public class Game implements World {
                     }
                 }
             }
-
-            if (m.getY() == getHeight()) {
+            if (intersect(m, special)) {
+                stack.push(m);
+            }
+            
+            if (m.getY() > getHeight()) {
                 /* Falling object has reached the ground reuse it */
                 m.setY(-1 * (int) (Math.random() * getHeight()));
                 m.setX((int) (Math.random() * getWidth()));
-            }
-            if (intersect(m, special)) {
-                stack.push(m);
-            }            
+            }  
+            for (int i = 0; i < stack.size(); i++) {
+                    Shapes object = (Shapes) stack.get(i);
+                    if (object.getId() == 3) {
+                        System.out.println(stack.size());
+                        for (int j = 0 ; !stack.isEmpty() ; j++) {  
+                            System.out.println(j+" popped");
+                            stack.peek().setY(-1 * (int) (Math.random() * getHeight()));
+                            stack.peek().setX((int) (Math.random() * getWidth()));
+                            stack.pop();
+                        }
+                    }
+                }   
         }
         return !timeout;
     }
