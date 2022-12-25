@@ -30,10 +30,10 @@ public class Game implements World {
         shapes[0] = "RedPlate";
         shapes[1] = "GreenPlate";
 // control objects 
-        control.add(new ImageObject(screenWidth / 2, (int) (screenHeight * 0.85), "./images/special.png", 1));
+        control.add(new ClownObject(screenWidth / 3, (int) (screenHeight * 0.65), "./images/clown.png", 10));
 // moving objects 
         Random r = new Random();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 10; i++) {
             moving.add((GameObject) factory.getShape(screenWidth, screenHeight, shapes[r.nextInt(shapes.length)]));
         }
         for (int i = 0; i < 2; i++) {
@@ -55,20 +55,14 @@ public class Game implements World {
         GameObject special = control.get(0);
 
         for (GameObject m : moving) {// moving starts
-
-            myController.update(m);//update falling object positions and handle caught shapes
-
+            if (intersect(m, special)) {
+                myController.addToStack(m);
+            }
             if (myController.verify()) {
                 score += 10;
             }
-            if (intersect(m, special)) {
-                myController.addToStack(m);
-            }
-            if (intersect(m, special)) {
-                myController.addToStack(m);
-            }
+            myController.update(m);//update falling object positions and handle caught shapes
             gameController.update(m);// update falling object after reaching ground
-
             if (myController.handleBomb()) {// handle catching bombs
                 score = Math.max(0, score - 10);	// lose score
             }

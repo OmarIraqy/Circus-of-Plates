@@ -38,8 +38,8 @@ public class StackController {
 
     public void refactorShapes() {
         if (!stack.isEmpty()) {
-            stack.get(0).setX(clown.getX());
-            stack.get(0).setY(clown.getY() - 2);
+            stack.get(0).setX(clown.getX()+10);
+            stack.get(0).setY(clown.getY() - 10);
             for (int i = 1; i < stack.size(); i++) {
                 stack.get(i).setX(stack.get(i - 1).getX());
                 stack.get(i).setY(stack.get(i - 1).getY() - 10);
@@ -68,6 +68,7 @@ public class StackController {
         }
         return false;
     }
+
     public boolean handleBomb() {
         for (int i = 0; i < stack.size(); i++) {
             Shapes object = (Shapes) stack.get(i);
