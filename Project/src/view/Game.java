@@ -28,7 +28,7 @@ public class Game implements World {
         shapes[0] = "RedPlate";
         shapes[1] = "GreenPlate";
 // control objects 
-        control.add(new ImageObject(screenWidth / 2, (int) (screenHeight * 0.85), "./images/special.png", 1));
+        control.add(new ImageObject(screenWidth / 2, (int) (screenHeight*0.6 ), "./images/clown with left stick.png", 1));
 // moving objects 
         Random r = new Random();
         for (int i = 0; i < 15; i++) {
@@ -44,24 +44,37 @@ public class Game implements World {
     }
 
     private boolean intersect(GameObject o1, GameObject o2) {
-        return (Math.abs((o1.getX() + o1.getWidth() / 2) - (o2.getX() + o2.getWidth() / 2)) <= o1.getWidth()) && (Math.abs((o1.getY() + o1.getHeight() / 2) - (o2.getY() + o2.getHeight() / 2)) <= o1.getHeight());
+        return (o1.getHeight()+o1.getY()== o2.getY() && o1.getX()+o1.getWidth()/2<=o2.getX()+o2.getWidth()/6 && o1.getX()+o1.getWidth()/2>=o2.getX());
+               //(Math.abs((o1.getX() + o1.getWidth() / 2) - (o2.getX() + 2)) <= 6) && (Math.abs((o1.getY() + o1.getHeight() / 2) - (o2.getY() )) <= o1.getHeight());
+    }
+    private boolean intersectPlates(GameObject o1, GameObject o2) {
+        return (o1.getHeight()+o1.getY()== o2.getY() && o1.getX()+o1.getWidth()/2<=o2.getX()+(o2.getWidth()*3)/4 && o1.getX()+o1.getWidth()/2>=o2.getX()+o2.getWidth()*0.25);
+               //(Math.abs((o1.getX() + o1.getWidth() / 2) - (o2.getX() + 2)) <= 6) && (Math.abs((o1.getY() + o1.getHeight() / 2) - (o2.getY() )) <= o1.getHeight());
     }
 
     @Override
     public boolean refresh() {
         boolean timeout = System.currentTimeMillis() - startTime > MAX_TIME; // time end and game over
-        GameObject special = control.get(0);
+        GameObject clown = control.get(0);
         // moving starts
         for (GameObject m : moving) {
             if (stack.search(m) == -1) {
                 m.setY((m.getY() + 1));
             }
+            if (stack.isEmpty()){    
+                if (intersect(m, clown)) {
+                    stack.push(m);
+                }
+            }    
             if (!stack.isEmpty()) {
-                stack.get(0).setX(special.getX());
-                stack.get(0).setY(special.getY() - 2);
+                stack.get(0).setX(clown.getX()-stack.get(0).getWidth()/3);
+                stack.get(0).setY(clown.getY()-stack.get(0).getHeight()+1);
                 for (int i = 1; i < stack.size(); i++) {
                     stack.get(i).setX(stack.get(i - 1).getX());
                     stack.get(i).setY(stack.get(i - 1).getY() - 10);
+                }
+                if (intersectPlates(m, stack.peek())) {
+                 stack.push(m);
                 }
             }
             if (stack.size() >= 3) {
@@ -77,10 +90,6 @@ public class Game implements World {
                     }
                 }
             }
-            if (intersect(m, special)) {
-                stack.push(m);
-            }
-            
             if (m.getY() > getHeight()) {
                 /* Falling object has reached the ground reuse it */
                 m.setY(-1 * (int) (Math.random() * getHeight()));
