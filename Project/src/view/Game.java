@@ -19,7 +19,8 @@ public class Game implements World {
     private final List<GameObject> moving = new LinkedList<GameObject>();
     private final List<GameObject> control = new LinkedList<GameObject>();
     private ShapesFactory factory = new ShapesFactory();
-    private Stack<GameObject> stack = new Stack<>();
+    private Stack<GameObject> stackLeft = new Stack<>();
+    private Stack<GameObject> stackRight = new Stack<>();
 
     public Game(int screenWidth, int screenHeight) {
         width = screenWidth;
@@ -28,7 +29,7 @@ public class Game implements World {
         shapes[0] = "RedPlate";
         shapes[1] = "GreenPlate";
 // control objects 
-        control.add(new ImageObject(screenWidth / 2, (int) (screenHeight*0.6 ), "./images/clown with left stick.png", 1));
+        control.add(new ImageObject(screenWidth / 2, (int) (screenHeight*0.6 ), "./images/clown with 2 sticks.png", 1));
 // moving objects 
         Random r = new Random();
         for (int i = 0; i < 15; i++) {
@@ -43,9 +44,12 @@ public class Game implements World {
         //constant.add(new ImageObject((int)(screenWidth*0.9*Math.random()), (int)(screenHeight*0.9*Math.random()), "/astronaut.png"));
     }
 
-    private boolean intersect(GameObject o1, GameObject o2) {
-        return (o1.getHeight()+o1.getY()== o2.getY() && o1.getX()+o1.getWidth()/2<=o2.getX()+o2.getWidth()/6 && o1.getX()+o1.getWidth()/2>=o2.getX());
+    private boolean intersectLeft(GameObject o1, GameObject o2) {
+        return (o1.getHeight()+o1.getY()== o2.getY() && o1.getX()+o1.getWidth()/2<=o2.getX()+(o2.getWidth()*38)/153 && o1.getX()+o1.getWidth()/2>=o2.getX());
                //(Math.abs((o1.getX() + o1.getWidth() / 2) - (o2.getX() + 2)) <= 6) && (Math.abs((o1.getY() + o1.getHeight() / 2) - (o2.getY() )) <= o1.getHeight());
+    }
+    private boolean intersectRight(GameObject o1, GameObject o2) {
+        return (o1.getHeight()+o1.getY()== o2.getY() && o1.getX()+o1.getWidth()/2<=o2.getX()+o2.getWidth() && o1.getX()+o1.getWidth()/2>=o2.getX()+(o2.getWidth()*115)/153);
     }
     private boolean intersectPlates(GameObject o1, GameObject o2) {
         return (o1.getHeight()+o1.getY()== o2.getY() && o1.getX()+o1.getWidth()/2<=o2.getX()+(o2.getWidth()*3)/4 && o1.getX()+o1.getWidth()/2>=o2.getX()+o2.getWidth()*0.25);
@@ -58,35 +62,64 @@ public class Game implements World {
         GameObject clown = control.get(0);
         // moving starts
         for (GameObject m : moving) {
-            if (stack.search(m) == -1) {
+            if (stackLeft.search(m) == -1) {
                 m.setY((m.getY() + 1));
             }
-            if (stack.isEmpty()){    
-                if (intersect(m, clown)) {
-                    stack.push(m);
-                }
-            }    
-            if (!stack.isEmpty()) {
-                stack.get(0).setX(clown.getX()-stack.get(0).getWidth()/3);
-                stack.get(0).setY(clown.getY()-stack.get(0).getHeight()+1);
-                for (int i = 1; i < stack.size(); i++) {
-                    stack.get(i).setX(stack.get(i - 1).getX());
-                    stack.get(i).setY(stack.get(i - 1).getY() - 10);
-                }
-                if (intersectPlates(m, stack.peek())) {
-                 stack.push(m);
+            if (stackLeft.isEmpty()){    
+                if (intersectLeft(m, clown)) {
+                    stackLeft.push(m);
                 }
             }
-            if (stack.size() >= 3) {
-                Shapes object1 = (Shapes) stack.get(stack.size() - 1);
-                Shapes object2 = (Shapes) stack.get(stack.size() - 2);
-                Shapes object3 = (Shapes) stack.get(stack.size() - 3);
+            if (stackRight.isEmpty()){    
+                if (intersectRight(m, clown)) {
+                    stackRight.push(m);
+                }
+            }
+            if (!stackLeft.isEmpty()) {
+                stackLeft.get(0).setX(clown.getX()-stackLeft.get(0).getWidth()/3);
+                stackLeft.get(0).setY(clown.getY()-stackLeft.get(0).getHeight()+1);
+                for (int i = 1; i < stackLeft.size(); i++) {
+                    stackLeft.get(i).setX(stackLeft.get(i - 1).getX());
+                    stackLeft.get(i).setY(stackLeft.get(i - 1).getY() - 10);
+                }
+                if (intersectPlates(m, stackLeft.peek())) {
+                 stackLeft.push(m);
+                }
+            }
+            if (!stackRight.isEmpty()) {
+                stackRight.get(0).setX(clown.getX()+(clown.getWidth()*115)/153-stackRight.get(0).getWidth()/3);
+                stackRight.get(0).setY(clown.getY()-stackRight.get(0).getHeight()+1);
+                for (int i = 1; i < stackRight.size(); i++) {
+                    stackRight.get(i).setX(stackRight.get(i - 1).getX());
+                    stackRight.get(i).setY(stackRight.get(i - 1).getY() - 10);
+                }
+                if (intersectPlates(m, stackRight.peek())) {
+                 stackRight.push(m);
+                }
+            }
+            if (stackLeft.size() >= 3) {
+                Shapes object1 = (Shapes) stackLeft.get(stackLeft.size() - 1);
+                Shapes object2 = (Shapes) stackLeft.get(stackLeft.size() - 2);
+                Shapes object3 = (Shapes) stackLeft.get(stackLeft.size() - 3);
                 if (object1.getId() == object2.getId() && object1.getId() == object3.getId()) {
                     score += 10;
                     for (int i = 0; i < 3; i++) {
-                        stack.peek().setY(-1 * (int) (Math.random() * getHeight()));
-                        stack.peek().setX((int) (Math.random() * getWidth()));
-                        stack.pop();
+                        stackLeft.peek().setY(-1 * (int) (Math.random() * getHeight()));
+                        stackLeft.peek().setX((int) (Math.random() * getWidth()));
+                        stackLeft.pop();
+                    }
+                }
+            }
+            if (stackRight.size() >= 3) {
+                Shapes object1 = (Shapes) stackRight.get(stackRight.size() - 1);
+                Shapes object2 = (Shapes) stackRight.get(stackRight.size() - 2);
+                Shapes object3 = (Shapes) stackRight.get(stackRight.size() - 3);
+                if (object1.getId() == object2.getId() && object1.getId() == object3.getId()) {
+                    score += 10;
+                    for (int i = 0; i < 3; i++) {
+                        stackRight.peek().setY(-1 * (int) (Math.random() * getHeight()));
+                        stackRight.peek().setX((int) (Math.random() * getWidth()));
+                        stackRight.pop();
                     }
                 }
             }
@@ -95,15 +128,27 @@ public class Game implements World {
                 m.setY(-1 * (int) (Math.random() * getHeight()));
                 m.setX((int) (Math.random() * getWidth()));
             }  
-            for (int i = 0; i < stack.size(); i++) {
-                    Shapes object = (Shapes) stack.get(i);
+            for (int i = 0; i < stackLeft.size(); i++) {
+                    Shapes object = (Shapes) stackLeft.get(i);
                     if (object.getId() == 3) {
-                        System.out.println(stack.size());
-                        for (int j = 0 ; !stack.isEmpty() ; j++) {  
+                        System.out.println(stackLeft.size());
+                        for (int j = 0 ; !stackLeft.isEmpty() ; j++) {  
                             System.out.println(j+" popped");
-                            stack.peek().setY(-1 * (int) (Math.random() * getHeight()));
-                            stack.peek().setX((int) (Math.random() * getWidth()));
-                            stack.pop();
+                            stackLeft.peek().setY(-1 * (int) (Math.random() * getHeight()));
+                            stackLeft.peek().setX((int) (Math.random() * getWidth()));
+                            stackLeft.pop();
+                        }
+                    }
+                }   
+            for (int i = 0; i < stackRight.size(); i++) {
+                    Shapes object = (Shapes) stackRight.get(i);
+                    if (object.getId() == 3) {
+                        System.out.println(stackRight.size());
+                        for (int j = 0 ; !stackRight.isEmpty() ; j++) {  
+                            System.out.println(j+" popped");
+                            stackRight.peek().setY(-1 * (int) (Math.random() * getHeight()));
+                            stackRight.peek().setX((int) (Math.random() * getWidth()));
+                            stackRight.pop();
                         }
                     }
                 }   
