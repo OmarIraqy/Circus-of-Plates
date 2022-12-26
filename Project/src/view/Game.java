@@ -19,18 +19,17 @@ public class Game implements World {
     private static List<GameObject> moving = new LinkedList<GameObject>();
     private static List<GameObject> control = new LinkedList<GameObject>();
     private ShapesFactory factory = new ShapesFactory();
-    //private Stack<GameObject> stack = new Stack<>();
     private StackController myController;
     private GameController gameController;
-
+    ClownObject clown;
     public Game(int screenWidth, int screenHeight) {
         width = screenWidth;
         height = screenHeight;
         String[] shapes = new String[2];
         shapes[0] = "RedPlate";
         shapes[1] = "GreenPlate";
-// control objects 
-        control.add(new ClownObject(screenWidth / 3, (int) (screenHeight * 0.65), "./images/clown.png", 10));
+// control objects
+        control.add(ClownObject.getInstance (screenWidth / 3, (int) (screenHeight * 0.65), "./images/clown.png", 10));
 // moving objects 
         Random r = new Random();
         for (int i = 0; i < 10; i++) {
@@ -41,8 +40,8 @@ public class Game implements World {
         }
 // constants objects 
         constant.add(new ImageObject(0, 0, "./images/theme3.png", 0));
-        myController = new StackController(screenWidth, screenHeight, control.get(0));
-        gameController = new GameController(screenWidth, screenHeight);
+        myController =  StackController.getInstance(screenWidth, screenHeight, control.get(0));
+        gameController = GameController.getInstance(screenWidth, screenHeight);
     }
 
     private boolean intersect(GameObject o1, GameObject o2) {

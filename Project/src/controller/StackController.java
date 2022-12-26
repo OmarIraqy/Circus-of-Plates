@@ -10,11 +10,19 @@ public class StackController {
     private int screenHeight;
     private GameObject clown;
     private Stack<GameObject> stack = new Stack<>();
+    private static StackController instance = null;
 
-    public StackController(int screenWidth, int screenHeight, GameObject clown) {
+    private StackController(int screenWidth, int screenHeight, GameObject clown) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.clown = clown;
+    }
+
+    public static synchronized StackController getInstance(int screenWidth, int screenHeight, GameObject clown) {
+        if (instance == null) {
+            instance = new StackController(screenWidth, screenHeight, clown);
+        }
+        return instance;
     }
 
     public void update(GameObject o) {
@@ -38,7 +46,7 @@ public class StackController {
 
     public void refactorShapes() {
         if (!stack.isEmpty()) {
-            stack.get(0).setX(clown.getX()+10);
+            stack.get(0).setX(clown.getX() + 10);
             stack.get(0).setY(clown.getY() - 10);
             for (int i = 1; i < stack.size(); i++) {
                 stack.get(i).setX(stack.get(i - 1).getX());
