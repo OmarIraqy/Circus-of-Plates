@@ -26,14 +26,19 @@ public class Game implements World {
     public Game(int screenWidth, int screenHeight) {
         width = screenWidth;
         height = screenHeight;
-        String[] shapes = new String[2];
+        String[] shapes = new String[6];
         shapes[0] = "RedPlate";
         shapes[1] = "GreenPlate";
+        shapes[2] = "BluePlate";
+        shapes[3] = "PinkPlate";
+        shapes[4] = "YellowPlate";
+        shapes[5] = "OrangePlate";
+        
 // control objects 
         control.add(new ClownObject(screenWidth / 3, (int) (screenHeight * 0.65), "./images/clown.png", 10));
 // moving objects 
         Random r = new Random();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 20; i++) {
             moving.add((GameObject) factory.getShape(screenWidth, screenHeight, shapes[r.nextInt(shapes.length)]));
         }
         for (int i = 0; i < 2; i++) {
