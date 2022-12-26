@@ -20,10 +20,8 @@ public class GameController {
     public static synchronized GameController getInstance(int screenWidth, int screenHeight) {
         if (instance == null) {
             instance = new GameController(screenWidth, screenHeight);
-            return instance;
-        } else {
-            return instance;
         }
+            return instance;
     }
 
     public void update(GameObject m) {
