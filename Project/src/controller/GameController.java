@@ -10,10 +10,18 @@ public class GameController {
 
     private int screenWidth;
     private int screenHeight;
+    private static GameController instance = null;
 
-    public GameController(int screenWidth, int screenHeight) {
+    private GameController(int screenWidth, int screenHeight) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
+    }
+
+    public static synchronized GameController getInstance(int screenWidth, int screenHeight) {
+        if (instance == null) {
+            instance = new GameController(screenWidth, screenHeight);
+        }
+            return instance;
     }
 
     public void update(GameObject m) {
