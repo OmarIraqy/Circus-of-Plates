@@ -20,13 +20,14 @@ public class Game implements World {
     private final List<GameObject> moving = new LinkedList<GameObject>();
     private final List<GameObject> control = new LinkedList<GameObject>();
     private ShapesFactory factory; 
-    private Stack<GameObject> stackLeft = new Stack<>();
-    private Stack<GameObject> stackRight = new Stack<>();
     private StackController myController;
     private GameController gameController;
-    public Game(int screenWidth, int screenHeight) {
+    private final int speed;
+    
+    public Game(int screenWidth, int screenHeight, int speed,String theme) {
         width = screenWidth;
         height = screenHeight;
+        this.speed=speed;
 
         String[] shapes = new String[6];
         shapes[0] = "RedPlate";
@@ -56,7 +57,7 @@ public class Game implements World {
             moving.add((GameObject) factory.getShape(screenWidth, screenHeight, "Bomb"));
         }
 // constants objects 
-        constant.add(new ImageObject(0, 0, "./images/theme3.png", 0));
+        constant.add(new ImageObject(0, 0, theme, 0));
         myController = StackController.getInstance(screenWidth, screenHeight, control.get(0));
         gameController = GameController.getInstance(screenWidth, screenHeight);
     }
@@ -102,7 +103,7 @@ public class Game implements World {
 
     @Override
     public int getSpeed() {
-        return 10;
+        return speed;
     }
 
     @Override

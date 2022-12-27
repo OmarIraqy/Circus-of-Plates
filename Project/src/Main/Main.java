@@ -42,13 +42,13 @@ public class Main {
         fileMenu.add(pauseMenuItem);
         fileMenu.add(resumeMenuItem);
         menuBar.add(fileMenu);
-        final GameEngine.GameController gameController = GameEngine.start("Test Game", new Game(900, 600), menuBar);
+        final GameEngine.GameController gameController = GameEngine.start("Test Game", new Game(900, 600,10,"./images/theme3.png"), menuBar);
 
         //Setting each menu Item its function
         newMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameController.changeWorld(new Game(900, 600));
+                gameController.changeWorld(new Game(900, 600 ,10,"./images/theme3.png"));
             }
         });
         pauseMenuItem.addActionListener(new ActionListener() {
