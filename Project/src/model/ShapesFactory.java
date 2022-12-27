@@ -5,21 +5,24 @@ import java.util.Random;
 
 public class ShapesFactory {
 
-    ImageObject[] greenPlates = new ImageObject[4];
-    ImageObject[] bluePlates = new ImageObject[4];
-    ImageObject[] orangePlates = new ImageObject[4];
-    ImageObject[] pinkPlates = new ImageObject[4];
-    ImageObject[] redPlates = new ImageObject[4];
-    ImageObject[] yellowPlates = new ImageObject[4];
-    ImageController imageController = new ImageController();
+    private int screenWidth, screenHeight;
+    private ImageObject[] greenPlates = new ImageObject[4];
+    private ImageObject[] bluePlates = new ImageObject[4];
+    private ImageObject[] orangePlates = new ImageObject[4];
+    private ImageObject[] pinkPlates = new ImageObject[4];
+    private ImageObject[] redPlates = new ImageObject[4];
+    private ImageObject[] yellowPlates = new ImageObject[4];
+    private ImageController imageController = new ImageController();
 
-    public ShapesFactory() {
-        greenPlates = imageController.getPlates(900, 600, "green", 1);
-        bluePlates = imageController.getPlates(900, 600, "blue", 3);
-        orangePlates = imageController.getPlates(900, 600, "orange", 4);
-        pinkPlates = imageController.getPlates(900, 600, "pink", 5);
-        redPlates = imageController.getPlates(900, 600, "red", 6);
-        yellowPlates = imageController.getPlates(900, 600, "yellow", 7);
+    public ShapesFactory(int screenWidth, int screenHeight) {
+        this.screenWidth = screenWidth;
+        this.screenHeight = screenHeight;
+        greenPlates = imageController.getPlates(screenWidth, screenHeight, "green", 1);
+        bluePlates = imageController.getPlates(screenWidth, screenHeight, "blue", 3);
+        orangePlates = imageController.getPlates(screenWidth, screenHeight, "orange", 4);
+        pinkPlates = imageController.getPlates(screenWidth, screenHeight, "pink", 5);
+        redPlates = imageController.getPlates(screenWidth, screenHeight, "red", 6);
+        yellowPlates = imageController.getPlates(screenWidth, screenHeight, "yellow", 7);
     }
 
     public Shapes getShape(int width, int height, String shapeName) {

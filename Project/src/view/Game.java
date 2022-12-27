@@ -19,7 +19,7 @@ public class Game implements World {
     private final List<GameObject> constant = new LinkedList<GameObject>();
     private final List<GameObject> moving = new LinkedList<GameObject>();
     private final List<GameObject> control = new LinkedList<GameObject>();
-    private ShapesFactory factory = new ShapesFactory();
+    private ShapesFactory factory; 
     private Stack<GameObject> stackLeft = new Stack<>();
     private Stack<GameObject> stackRight = new Stack<>();
     private StackController myController;
@@ -27,19 +27,20 @@ public class Game implements World {
     public Game(int screenWidth, int screenHeight) {
         width = screenWidth;
         height = screenHeight;
-        String[] shapes = new String[6];
-        shapes[0] = "RedPlate";
+        factory = new ShapesFactory(screenWidth,screenHeight);
+        String[] shapes = new String[5];
+        shapes[0] = "OrangePlate";
         shapes[1] = "GreenPlate";
         shapes[2] = "BluePlate";
         shapes[3] = "PinkPlate";
         shapes[4] = "YellowPlate";
-        shapes[5] = "OrangePlate";
+       // shapes[5] = "RedPlate";
         
 // control objects 
         control.add(ClownObject.getInstance(screenWidth / 3, (int) (screenHeight * 0.65), "./images/clown.png", 10));
 // moving objects 
         Random r = new Random();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 25; i++) {
             moving.add((GameObject) factory.getShape(screenWidth, screenHeight, shapes[r.nextInt(shapes.length)]));
         }
         for (int i = 0; i < 2; i++) {

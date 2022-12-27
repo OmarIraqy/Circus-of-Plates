@@ -8,7 +8,7 @@ import model.*;
 
 public class StackController {
 
-    private int screenWidth;
+    private  int screenWidth;
     private int screenHeight;
     private GameObject clown;
     private Stack<GameObject> leftStack = new Stack<>();
@@ -66,10 +66,10 @@ public class StackController {
 
     public void handleLeftStack(GameObject m) {
         leftStack.get(0).setX(clown.getX() - leftStack.get(0).getWidth() / 3);
-        leftStack.get(0).setY(clown.getY() - leftStack.get(0).getHeight() + 1);
+        leftStack.get(0).setY(clown.getY() - leftStack.get(0).getHeight());
         for (int i = 1; i < leftStack.size(); i++) {
             leftStack.get(i).setX(leftStack.get(i - 1).getX());
-            leftStack.get(i).setY(leftStack.get(i - 1).getY() - 10);
+            leftStack.get(i).setY(leftStack.get(i - 1).getY() - leftStack.get(i).getHeight());
         }
         if (intersectStacks(m, leftStack.peek())) {
             leftStack.push(m);
@@ -78,10 +78,10 @@ public class StackController {
 
     public void handleRightStack(GameObject m) {
         rightStack.get(0).setX(clown.getX() + (clown.getWidth() * 115) / 153 - rightStack.get(0).getWidth() / 3);
-        rightStack.get(0).setY(clown.getY() - rightStack.get(0).getHeight() + 1);
+        rightStack.get(0).setY(clown.getY() - rightStack.get(0).getHeight());
         for (int i = 1; i < rightStack.size(); i++) {
             rightStack.get(i).setX(rightStack.get(i - 1).getX());
-            rightStack.get(i).setY(rightStack.get(i - 1).getY() - 10);
+            rightStack.get(i).setY(rightStack.get(i - 1).getY() - rightStack.get(i).getHeight());
         }
         if (intersectStacks(m, rightStack.peek())) {
             rightStack.push(m);
