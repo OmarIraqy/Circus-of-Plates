@@ -116,17 +116,6 @@ public class StackController {
     }
 
     public boolean handleBomb() {
-
-        for (int i = 0; i < stack.size(); i++) {
-            Shapes object = (Shapes) stack.get(i);
-            if (object.getId() == 100) {
-                for (int j = 0; !stack.isEmpty(); j++) {
-                    stack.peek().setY(-1 * (int) (Math.random() * screenHeight));
-                    stack.peek().setX((int) (Math.random() * screenWidth));
-                    stack.pop();
-                }
-            }
-        }
         int flags = 0;
         entries = stack.entrySet().iterator();
         HashMap.Entry<Integer, Stack<GameObject>> entry;
@@ -141,7 +130,6 @@ public class StackController {
                         entry.getValue().pop();
                     }
                     flags++;
-
                 }
             }
         }
