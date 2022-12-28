@@ -43,7 +43,6 @@ public class Main {
         fileMenu.add(resumeMenuItem);
         menuBar.add(fileMenu);
         final GameEngine.GameController gameController = GameEngine.start("Test Game", diffculty.newGame("Hard", 900, 600), menuBar);
-
         //Setting each menu Item its function
         newMenuItem.addActionListener(new ActionListener() {
             @Override
