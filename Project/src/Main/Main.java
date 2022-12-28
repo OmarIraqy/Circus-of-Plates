@@ -9,8 +9,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
-import view.Game;
-
 public class Main {
 
     public static void main(String[] args) {

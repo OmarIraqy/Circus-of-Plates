@@ -16,8 +16,9 @@ public class StackController {
     private static StackController instance = null;
     private HashMap<Integer, Stack<GameObject>> stack;
     private Iterator<HashMap.Entry<Integer, Stack<GameObject>>> entries;
+    private int movingSize;
 
-    private StackController(int screenWidth, int screenHeight, GameObject clown) {
+    private StackController(int screenWidth, int screenHeight, GameObject clown, int movingSize) {
 
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
@@ -25,11 +26,12 @@ public class StackController {
         this.stack = new HashMap<>();
         stack.put(1, leftStack);
         stack.put(2, rightStack);
+        this.movingSize = movingSize;
     }
 
-    public static synchronized StackController getInstance(int screenWidth, int screenHeight, GameObject clown) {
+    public static synchronized StackController getInstance(int screenWidth, int screenHeight, GameObject clown, int movingSize) {
         if (instance == null) {
-            instance = new StackController(screenWidth, screenHeight, clown);
+            instance = new StackController(screenWidth, screenHeight, clown, movingSize);
         }
         return instance;
     }
@@ -62,6 +64,14 @@ public class StackController {
                 }
             }
         }
+    }
+
+    public int getMovingSize() {
+        return this.movingSize;
+    }
+
+    public int getStacksSize() {
+        return leftStack.size() + rightStack.size();
     }
 
     public void handleLeftStack(GameObject m) {
@@ -144,4 +154,17 @@ public class StackController {
         return rightStack.isEmpty();
     }
 
+    public int getLeftPeek() {
+        if (isLeftEmpty()) {
+            return 0;
+        }
+        return leftStack.peek().getY();
+    }
+
+    public int getRightPeek() {
+        if (isRightEmpty()) {
+            return 0;
+        }
+        return rightStack.peek().getY();
+    }
 }
