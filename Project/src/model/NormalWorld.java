@@ -3,7 +3,7 @@ package model;
 
 public class NormalWorld implements Difficulty {
 
-    private final int speedN = 15, movingN = 15, bombsN = 3;
+    private final int speedN = 15, movingN = 20, bombsN = 3;
     private final int gameSpeed, movingNum, bombsNum;
     private final String theme;
 

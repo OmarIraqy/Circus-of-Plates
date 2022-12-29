@@ -3,7 +3,7 @@ package model;
 
 public class HardWorld implements Difficulty {
 
-    private final int speedH = 1, movingH = 20, bombsH = 4;
+    private final int speedH = 1, movingH = 25, bombsH = 4;
     private final int gameSpeed, movingNum, bombsNum;
     private final String theme;
 

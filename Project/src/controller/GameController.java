@@ -28,6 +28,19 @@ public class GameController {
         return instance;
     }
 
+    public String[] getShapes() {
+        String[] shapes = new String[5];
+        shapes[0] = "RedPlate";
+        // shapes[0] = "OrangePlate";
+        shapes[1] = "GreenPlate";
+        shapes[2] = "BluePlate";
+        //  shapes[3] = "PinkPlate";
+        shapes[3] = "YellowPlate";
+        shapes[4] = "OrangePlate";
+        //shapes[5] = "RedPlate";
+        return shapes;
+    }
+
     public int getScreenWidth() {
         return screenWidth;
     }

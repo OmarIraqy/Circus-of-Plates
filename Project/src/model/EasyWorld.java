@@ -1,7 +1,7 @@
 package model;
 
 public class EasyWorld implements Difficulty {
-     private final int speedE = 30, movingE = 10, bombsE = 2;
+     private final int speedE = 20, movingE = 15, bombsE = 2;
     private final int gameSpeed, movingNum, bombsNum;
     private final String theme;
 

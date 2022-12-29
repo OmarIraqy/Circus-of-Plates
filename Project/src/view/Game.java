@@ -10,73 +10,45 @@ import model.*;
 
 public class Game implements World {
 
-    private final List<GameObject> constant = new LinkedList<GameObject>();
-    private final List<GameObject> moving = new LinkedList<GameObject>();
-    private final List<GameObject> control = new LinkedList<GameObject>();
-    private ShapesFactory factory;
-    private StackController stackControl;
-    private GameController gameControl;
-    private final int speed;
+    private final List<GameObject> constant = new LinkedList<>();
+    private final List<GameObject> moving = new LinkedList<>();
+    private final List<GameObject> control = new LinkedList<>();
+    private final ShapesFactory factory;
+    private final StackController stackControl;
+    private final GameController gameControl;
+    private final Difficulty world;
 
-    public Game(GameController gamecontrol, int speed, String theme, String diff) {
+    public Game(GameController gamecontrol, Difficulty world) {
         this.gameControl = gamecontrol;
-        this.speed = speed;
-        String[] shapes = new String[6];
-        shapes[0] = "RedPlate";
-        shapes[0] = "OrangePlate";
-        shapes[1] = "GreenPlate";
-        shapes[2] = "BluePlate";
-        shapes[3] = "PinkPlate";
-        shapes[4] = "YellowPlate";
-        shapes[5] = "OrangePlate";
-        shapes[5] = "RedPlate";
+        this.world = world;
         factory = new ShapesFactory(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight());
-
 // control objects 
         control.add(ClownObject.getInstance(gamecontrol.getScreenWidth() / 3, (int) (gamecontrol.getScreenHeight() * 0.65), "./images/clown.png", 10));
+        stackControl = StackController.getInstance(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(), control.get(0), world.getMovingNum() - world.getBombsNum() + 1);
 // moving objects 
         Random r = new Random();
-//        for (int i = 0; i < gameControl.getMovingNumber(); i++) {
-//            moving.add((GameObject) factory.getShape(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(), shapes[r.nextInt(shapes.length)]));
-//        }
-//        for (int i = 0; i < gameControl.getbombsNumber(); i++) {
-//            moving.add((GameObject) factory.getShape(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(), "Bomb"));
-//        }
-//// constants objects 
-//        constant.add(new ImageObject(0, 0, theme, 0));
-//        stackControl = StackController.getInstance(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(), control.get(0),
-//                difficulity.getMovingNumber() - difficulity.getbombsNumber() + 1);
-    }
-
-    private boolean intersectLeft(GameObject o1, GameObject o2) {
-        return (o1.getHeight() + o1.getY() == o2.getY() && o1.getX() + o1.getWidth() / 2 <= o2.getX() + (o2.getWidth() * 38) / 153 && o1.getX() + o1.getWidth() / 2 >= o2.getX());
-    }
-
-    private boolean intersectRight(GameObject o1, GameObject o2) {
-        return (o1.getHeight() + o1.getY() == o2.getY() && o1.getX() + o1.getWidth() / 2 <= o2.getX() + o2.getWidth() && o1.getX() + o1.getWidth() / 2 >= o2.getX() + (o2.getWidth() * 115) / 153);
+        for (int i = 0; i < world.getMovingNum(); i++) {
+            moving.add((GameObject) factory.getShape(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(),gamecontrol.getShapes()[r.nextInt(gamecontrol.getShapes().length)]));
+        }
+        for (int i = 0; i < world.getBombsNum(); i++) {
+            moving.add((GameObject) factory.getShape(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(), "Bomb"));
+        }
+// constants objects 
+        constant.add(new ImageObject(0, 0, world.getTheme(), 0));
     }
 
     @Override
     public boolean refresh() {
-        GameObject clown = control.get(0);
         for (GameObject m : moving) {
             stackControl.update(m);
-            if (stackControl.isLeftEmpty()) {
-                if (intersectLeft(m, clown)) {
-                    stackControl.addToStack(m, 1);
-                }
-            }
-            if (stackControl.isRightEmpty()) {
-                if (intersectRight(m, clown)) {
-                    stackControl.addToStack(m, 2);
-                }
-            }
+            stackControl.handleIntersection(m);
+            // Catching 3 of same color
             if (stackControl.verify()) {
                 gameControl.setScore(gameControl.getScore() + 10);
             }
             // update falling object after reaching ground
             gameControl.update(m);
-            // handle catching bombs
+            // Catching bombs
             if (stackControl.handleBomb()) {
                 gameControl.setScore(Math.max(0, gameControl.getScore() - 10));	// lose score
                 gameControl.setLives(gameControl.getLives().length() - 1);
@@ -87,7 +59,7 @@ public class Game implements World {
 
     @Override
     public int getSpeed() {
-        return speed;
+        return world.getGameSpeed();
     }
 
     @Override

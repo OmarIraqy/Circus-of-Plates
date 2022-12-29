@@ -1,6 +1,7 @@
 package Main;
 
 import controller.DiffcultyController;
+import controller.GameController;
 import eg.edu.alexu.csd.oop.game.GameEngine;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -9,6 +10,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import model.Difficulty;
+import view.Game;
 public class Main {
 
     public static void main(String[] args) {
@@ -42,12 +45,18 @@ public class Main {
         fileMenu.add(pauseMenuItem);
         fileMenu.add(resumeMenuItem);
         menuBar.add(fileMenu);
-        final GameEngine.GameController gameController = GameEngine.start("Test Game", diffculty.newGame("Hard", 900, 600), menuBar);
+        
+        ////////////////////// User set the following by gui ///////////////////
+        Difficulty world=diffculty.getDifficulty("Hard");
+        GameController gameControl= GameController.getInstance(900, 600);
+        ////////////////////////////////////////////////////////////////////////
+        
+        final GameEngine.GameController gameController = GameEngine.start("Test Game", new Game(gameControl ,world), menuBar);
         //Setting each menu Item its function
         newMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameController.changeWorld(diffculty.newGame("Hard", 900, 600));
+                gameController.changeWorld(new Game(gameControl ,world));
             }
         });
         pauseMenuItem.addActionListener(new ActionListener() {

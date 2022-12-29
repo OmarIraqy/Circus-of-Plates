@@ -47,8 +47,29 @@ public class StackController {
         stack.get(key).push(o);
     }
 
+    private boolean intersectLeft(GameObject o1, GameObject o2) {
+        return (o1.getHeight() + o1.getY() == o2.getY() && o1.getX() + o1.getWidth() / 2 <= o2.getX() + (o2.getWidth() * 38) / 153 && o1.getX() + o1.getWidth() / 2 >= o2.getX());
+    }
+
+    private boolean intersectRight(GameObject o1, GameObject o2) {
+        return (o1.getHeight() + o1.getY() == o2.getY() && o1.getX() + o1.getWidth() / 2 <= o2.getX() + o2.getWidth() && o1.getX() + o1.getWidth() / 2 >= o2.getX() + (o2.getWidth() * 115) / 153);
+    }
+
     private boolean intersectStacks(GameObject o1, GameObject o2) {
         return (o1.getHeight() + o1.getY() == o2.getY() && o1.getX() + o1.getWidth() / 2 <= o2.getX() + (o2.getWidth() * 3) / 4 && o1.getX() + o1.getWidth() / 2 >= o2.getX() + o2.getWidth() * 0.25);
+    }
+
+    public void handleIntersection(GameObject m) {
+        if (leftStack.isEmpty()) {
+            if (intersectLeft(m, clown)) {
+                leftStack.push(m);
+            }
+        }
+        if (rightStack.isEmpty()) {
+            if (intersectRight(m, clown)) {
+                rightStack.push(m);
+            }
+        }
     }
 
     public void refactorShapes(GameObject m) {
