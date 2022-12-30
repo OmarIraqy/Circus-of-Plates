@@ -4,27 +4,35 @@
  */
 package view;
 
+import controller.SavingController;
+import interfaces.Node;
+import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Kimo Store
  */
-public class HighScores extends javax.swing.JFrame {
+public class HighScores extends javax.swing.JFrame implements Node {
 
     /**
      * Creates new form HighScores
      */
-    StartWindow starWindow;
+    private Node parent;
+    private SavingController database;
 
-    public StartWindow getParentNode() {
-        return starWindow;
-    }
-
-    public void setParentNode(StartWindow starWindow) {
-        this.starWindow = starWindow;
-    }
+   
     
-    public HighScores() {
+    public HighScores(SavingController database) {
         initComponents();
+        this.database=database;
+        this.setTitle("View Products");
+        DefaultTableModel table = (DefaultTableModel) highScores.getModel();
+        table.setColumnCount(2);
+        for(int i=0;i<database.getAllScores().size();i++)
+        {
+            table.addRow(this.database.getAllScores().get(i));
+        }
     }
 
     /**
@@ -36,11 +44,37 @@ public class HighScores extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jScrollPane1 = new javax.swing.JScrollPane();
+        highScores = new javax.swing.JTable();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        highScores.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Score"
+            }
+        ));
+        jScrollPane1.setViewportView(highScores);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        this.setVisible(false);
+        ((JFrame)this.getParentNode()).setVisible(true);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -70,13 +104,21 @@ public class HighScores extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new HighScores().setVisible(true);
-            }
-        });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable highScores;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public Node getParentNode() {
+        return parent;
+    }
+
+    @Override
+    public void setParentNode(Node node) {
+        this.parent=node;
+    }
 }

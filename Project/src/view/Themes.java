@@ -7,10 +7,14 @@ package view;
 import controller.AudioController;
 import controller.DiffcultyController;
 import controller.GameController;
+import controller.SavingController;
 import eg.edu.alexu.csd.oop.game.GameEngine;
+import interfaces.Node;
+import interfaces.Observer;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -21,29 +25,28 @@ import model.Difficulty;
  *
  * @author Kimo Store
  */
-public class Themes extends javax.swing.JFrame {
+public class Themes extends javax.swing.JFrame implements Node,Observer {
 
     /**
      * Creates new form Themes
      */
-    private StartWindow starWindow;
     private AudioController audio;
+    private Node parent;
+    private boolean gameOver=false;
+    private GameEngine.GameController gameController;
+    private SavingController database;
+    private GameController gameControl;
     
-    public StartWindow getParentNode() {
-        return starWindow;
-    }
+    
 
-    public void setParentNode(StartWindow starWindow) {
-        this.starWindow = starWindow;
-    }
-
-    public Themes(AudioController audio) {
+    public Themes(AudioController audio,SavingController database) {
         initComponents();
         background.setIcon(new javax.swing.ImageIcon("./images/themes.png"));
         easyLabel.setIcon(new javax.swing.ImageIcon("./images/easy label.png"));
         mediumLabel.setIcon(new javax.swing.ImageIcon("./images/normal label.png"));
         HardLabel.setIcon(new javax.swing.ImageIcon("./images/hard label.png"));
         Back.setIcon(new javax.swing.ImageIcon("./images/back.png"));
+        this.database=database;
         this.audio=audio;
     }
 
@@ -70,7 +73,7 @@ public class Themes extends javax.swing.JFrame {
         setLocation(new java.awt.Point(500, 250));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        Easy.setText("easy");
+        Easy.setText("Easy");
         Easy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 EasyActionPerformed(evt);
@@ -139,7 +142,7 @@ public class Themes extends javax.swing.JFrame {
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
-        getParentNode().setVisible(true);
+        ((JFrame)this.getParentNode()).setVisible(true);
     }//GEN-LAST:event_BackActionPerformed
 
     /**
@@ -148,68 +151,70 @@ public class Themes extends javax.swing.JFrame {
     void setup(String theme) {
         DiffcultyController diffculty = new DiffcultyController();
         
-
-        JMenuBar menuBar = new JMenuBar();
-
-        JMenu fileMenu = new JMenu("File");
-        menuBar.add(fileMenu);
-
-        //Adding Exit as a menu item and setting it shortcut
-        JMenuItem exitMenuItem = new JMenuItem("Exit");
-        exitMenuItem.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
-
-        //Adding new as a menu item and setting it shortcut
-        JMenuItem newMenuItem = new JMenuItem("New");
-        newMenuItem.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
-
-        //Adding Pause as a menu item and setting it shortcut
-        JMenuItem pauseMenuItem = new JMenuItem("Pause");
-        pauseMenuItem.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
-
-        //Adding Resume as a menu item and setting it shortcut
-        JMenuItem resumeMenuItem = new JMenuItem("Resume");
-        resumeMenuItem.setAccelerator(KeyStroke.getKeyStroke('R', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
-
-        //Adding File menu items
-        fileMenu.add(exitMenuItem);
-        fileMenu.add(newMenuItem);
-        fileMenu.addSeparator();
-        fileMenu.add(pauseMenuItem);
-        fileMenu.add(resumeMenuItem);
-        menuBar.add(fileMenu);
+        
+//        JMenuBar menuBar = new JMenuBar();
+//
+//        JMenu fileMenu = new JMenu("File");
+//        menuBar.add(fileMenu);
+//
+//        //Adding Exit as a menu item and setting it shortcut
+//        JMenuItem exitMenuItem = new JMenuItem("Exit");
+//        exitMenuItem.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+//
+//        //Adding new as a menu item and setting it shortcut
+//        JMenuItem newMenuItem = new JMenuItem("New");
+//        newMenuItem.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+//
+//        //Adding Pause as a menu item and setting it shortcut
+//        JMenuItem pauseMenuItem = new JMenuItem("Pause");
+//        pauseMenuItem.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+//
+//        //Adding Resume as a menu item and setting it shortcut
+//        JMenuItem resumeMenuItem = new JMenuItem("Resume");
+//        resumeMenuItem.setAccelerator(KeyStroke.getKeyStroke('R', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+//
+//        //Adding File menu items
+//        fileMenu.add(exitMenuItem);
+//        fileMenu.add(newMenuItem);
+//        fileMenu.addSeparator();
+//        fileMenu.add(pauseMenuItem);
+//        fileMenu.add(resumeMenuItem);
+//        menuBar.add(fileMenu);
 
         ////////////////////// User set the following by gui ///////////////////
         Difficulty world = diffculty.getDifficulty(theme);
-        GameController gameControl = GameController.getInstance(900, 600);
+        gameControl = GameController.getInstance(900, 600, audio);
         ////////////////////////////////////////////////////////////////////////
-
-        final GameEngine.GameController gameController = GameEngine.start(theme+" Mode", new Game(gameControl, world, audio), menuBar);
+        Game clownGame = new Game(gameControl, world, audio);
+        clownGame.addObserver(this);
+        gameController = GameEngine.start(theme+" Mode",clownGame );
+        
         //Setting each menu Item its function
-        newMenuItem.addActionListener(new ActionListener() {
-            
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gameController.changeWorld(new Game(GameController.getInstance(900, 600), diffculty.getDifficulty(theme), audio));
-            }
-        });
-        pauseMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gameController.pause();
-            }
-        });
-        resumeMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gameController.resume();
-            }
-        });
-        exitMenuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+//        newMenuItem.addActionListener(new ActionListener() {
+//            
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                
+//            }
+//        });
+//        pauseMenuItem.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                gameController.pause();
+//            }
+//        });
+//        resumeMenuItem.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                gameController.resume();
+//            }
+//        });
+//        exitMenuItem.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                System.exit(0);
+//            }
+//        });
     }
 
     public static void main(String args[]) {
@@ -249,4 +254,22 @@ public class Themes extends javax.swing.JFrame {
     private javax.swing.JLabel easyLabel;
     private javax.swing.JLabel mediumLabel;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public Node getParentNode() {
+        return parent;
+    }
+
+    @Override
+    public void setParentNode(Node node) {
+        this.parent=node;
+    }
+
+    @Override
+    public void update() {
+        gameOver=true;
+        gameController.pause();
+        Saving saving=new Saving(gameControl.getScore(), database);
+        saving.setVisible(true);
+    }
 }

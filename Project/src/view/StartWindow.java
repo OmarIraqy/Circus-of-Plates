@@ -1,13 +1,16 @@
 package view;
 
 import controller.AudioController;
+import controller.SavingController;
+import interfaces.Node;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.LineUnavailableException;
 
-public class StartWindow extends javax.swing.JFrame {
+public class StartWindow extends javax.swing.JFrame implements Node {
 
     private AudioController audio=null;
+    private SavingController database;
     public StartWindow() {
         initComponents();
         try {
@@ -15,6 +18,7 @@ public class StartWindow extends javax.swing.JFrame {
         } catch (LineUnavailableException ex) {
             Logger.getLogger(StartWindow.class.getName()).log(Level.SEVERE, null, ex);
         }
+        database=new SavingController();
         /*background.setIcon(new javax.swing.ImageIcon("./images/Start window.png"));
         NewGame.setIcon(new javax.swing.ImageIcon("./images/new game.png")); 
         HighScores.setIcon(new javax.swing.ImageIcon("./images/High Scores.png")); 
@@ -80,7 +84,7 @@ public class StartWindow extends javax.swing.JFrame {
 
     private void HighScoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HighScoresActionPerformed
         // TODO add your handling code here:
-        HighScores  highScores=new HighScores();
+        HighScores  highScores=new HighScores(database);
         highScores.setParentNode(this);
         this.setVisible(false);
         highScores.setVisible(true);
@@ -88,7 +92,7 @@ public class StartWindow extends javax.swing.JFrame {
 
     private void NewGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewGameActionPerformed
         // TODO add your handling code here:
-        Themes themes=new Themes(audio);
+        Themes themes=new Themes(audio,database);
         themes.setParentNode(this);
         this.setVisible(false);
         themes.setVisible(true);
@@ -96,6 +100,7 @@ public class StartWindow extends javax.swing.JFrame {
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
         // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_exitActionPerformed
 
     /**
@@ -139,4 +144,14 @@ public class StartWindow extends javax.swing.JFrame {
     private javax.swing.JLabel background;
     private javax.swing.JButton exit;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public Node getParentNode() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void setParentNode(Node node) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

@@ -14,29 +14,31 @@ public class GameController  {
     private String heart = "♥";
     private String lives;
     private static GameController instance = null;
+    private AudioController audio;
 
-    private GameController(int screenWidth, int screenHeight) {
+    private GameController(int screenWidth, int screenHeight, AudioController audio) {
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.lives = heart.repeat(3);
+        this.audio=audio;
     }
 
-    public static synchronized GameController getInstance(int screenWidth, int screenHeight) {
+    public static synchronized GameController getInstance(int screenWidth, int screenHeight, AudioController audio) {
         if (instance == null) {
-            instance = new GameController(screenWidth, screenHeight);
+            instance = new GameController(screenWidth, screenHeight,audio);
         }
         return instance;
     }
 
     public String[] getShapes() {
-        String[] shapes = new String[5];
+        String[] shapes = new String[3];
         shapes[0] = "RedPlate";
         // shapes[0] = "OrangePlate";
         shapes[1] = "GreenPlate";
         shapes[2] = "BluePlate";
         //  shapes[3] = "PinkPlate";
-        shapes[3] = "YellowPlate";
-        shapes[4] = "OrangePlate";
+//        shapes[3] = "YellowPlate";
+//        shapes[4] = "OrangePlate";
         //shapes[5] = "RedPlate";
         return shapes;
     }

@@ -1,0 +1,5 @@
+Iraqy,70
+Asser,100
+iraqy,0
+name,10
+Name,0

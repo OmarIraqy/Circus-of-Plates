@@ -3,12 +3,15 @@ package view;
 import controller.*;
 import eg.edu.alexu.csd.oop.game.GameObject;
 import eg.edu.alexu.csd.oop.game.World;
+import interfaces.Observer;
+import interfaces.Subject;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import model.*;
 
-public class Game implements World {
+public class Game implements World,Subject {
 
     private final List<GameObject> constant = new LinkedList<>();
     private final List<GameObject> moving = new LinkedList<>();
@@ -18,8 +21,10 @@ public class Game implements World {
     private final GameController gameControl;
     private final Difficulty world;
     private AudioController audio;
+    private ArrayList<Observer> observers;   
 
     public Game(GameController gamecontrol, Difficulty world, AudioController audio) {
+        observers = new ArrayList<>();
         this.gameControl = gamecontrol;
         this.world = world;
         this.audio = audio;
@@ -57,11 +62,14 @@ public class Game implements World {
             }
         }
         if (gameControl.isLost(stackControl)) {
-            
             audio.playGameOver();
+            audio.stopEasyMusic();
+            audio.stopNormalMusic();
+            audio.stopHardMusic();      
+            this.notifyObservers();
+            System.out.println("Notified");
             return false;
         } else {
-            audio.playGameOver();
             return true;
         }
     }
@@ -104,5 +112,23 @@ public class Game implements World {
     @Override
     public String getStatus() {
         return ("Score= " + gameControl.getScore() + " Lives: ️" + gameControl.getLives());	// update status
+    }
+
+    @Override
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(int i=0;i<observers.size();i++)
+        {
+            observers.get(i).update();
+        }
     }
 }
