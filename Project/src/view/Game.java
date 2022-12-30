@@ -57,9 +57,12 @@ public class Game implements World {
             }
         }
         if (gameControl.isLost(stackControl)) {
-            return true;
-        } else {
+            
+            audio.playGameOver();
             return false;
+        } else {
+            audio.playGameOver();
+            return true;
         }
     }
 

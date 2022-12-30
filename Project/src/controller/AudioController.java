@@ -33,8 +33,8 @@ public class AudioController {
             pointEarned.open(AudioSystem.getAudioInputStream(new File("./audio/PointEarned.wav").getAbsoluteFile()));
             bomb = AudioSystem.getClip();
             bomb.open(AudioSystem.getAudioInputStream(new File("./audio/Bomb.wav").getAbsoluteFile()));
-//            gameOver = AudioSystem.getClip();
-//            gameOver.open(AudioSystem.getAudioInputStream(new File("./audio/GameOver2.wav").getAbsoluteFile()));
+            gameOver = AudioSystem.getClip();
+            gameOver.open(AudioSystem.getAudioInputStream(new File("./audio/GameOver2.wav").getAbsoluteFile()));
         } catch (UnsupportedAudioFileException ex) {
             Logger.getLogger(AudioController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

@@ -11,9 +11,6 @@ import eg.edu.alexu.csd.oop.game.GameEngine;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -150,20 +147,14 @@ public class Themes extends javax.swing.JFrame {
      */
     void setup(String theme) {
         DiffcultyController diffculty = new DiffcultyController();
-        AudioController audio=null;
         
-        try {
-            audio = new AudioController();
-        } catch (LineUnavailableException ex) {
-            Logger.getLogger(Themes.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
         menuBar.add(fileMenu);
 
-        //Addin Exit as a menu item and setting it shortcut
+        //Adding Exit as a menu item and setting it shortcut
         JMenuItem exitMenuItem = new JMenuItem("Exit");
         exitMenuItem.setAccelerator(KeyStroke.getKeyStroke('Q', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
 
@@ -171,11 +162,11 @@ public class Themes extends javax.swing.JFrame {
         JMenuItem newMenuItem = new JMenuItem("New");
         newMenuItem.setAccelerator(KeyStroke.getKeyStroke('N', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
 
-        //Addin Pause as a menu item and setting it shortcut
+        //Adding Pause as a menu item and setting it shortcut
         JMenuItem pauseMenuItem = new JMenuItem("Pause");
         pauseMenuItem.setAccelerator(KeyStroke.getKeyStroke('P', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
 
-        //Addin Resume as a menu item and setting it shortcut
+        //Adding Resume as a menu item and setting it shortcut
         JMenuItem resumeMenuItem = new JMenuItem("Resume");
         resumeMenuItem.setAccelerator(KeyStroke.getKeyStroke('R', Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
 
@@ -188,17 +179,17 @@ public class Themes extends javax.swing.JFrame {
         menuBar.add(fileMenu);
 
         ////////////////////// User set the following by gui ///////////////////
-        final Difficulty world = diffculty.getDifficulty(theme);
+        Difficulty world = diffculty.getDifficulty(theme);
         GameController gameControl = GameController.getInstance(900, 600);
         ////////////////////////////////////////////////////////////////////////
 
-        GameEngine.GameController gameController = GameEngine.start("Test Game", new Game(gameControl, world, audio), menuBar);
+        final GameEngine.GameController gameController = GameEngine.start(theme+" Mode", new Game(gameControl, world, audio), menuBar);
         //Setting each menu Item its function
         newMenuItem.addActionListener(new ActionListener() {
             
             @Override
             public void actionPerformed(ActionEvent e) {
-//                gameController.changeWorld(new Game(gameControl, world, audio));
+                gameController.changeWorld(new Game(GameController.getInstance(900, 600), diffculty.getDifficulty(theme), audio));
             }
         });
         pauseMenuItem.addActionListener(new ActionListener() {
