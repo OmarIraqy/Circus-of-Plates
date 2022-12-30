@@ -1,9 +1,20 @@
 package view;
 
+import controller.AudioController;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
+
 public class StartWindow extends javax.swing.JFrame {
 
+    private AudioController audio=null;
     public StartWindow() {
         initComponents();
+        try {
+            audio = new AudioController();
+        } catch (LineUnavailableException ex) {
+            Logger.getLogger(StartWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
         /*background.setIcon(new javax.swing.ImageIcon("./images/Start window.png"));
         NewGame.setIcon(new javax.swing.ImageIcon("./images/new game.png")); 
         HighScores.setIcon(new javax.swing.ImageIcon("./images/High Scores.png")); 
@@ -13,6 +24,8 @@ public class StartWindow extends javax.swing.JFrame {
         exit.setIcon(new javax.swing.ImageIcon("./images/exit.png"));
         HighScores.setIcon(new javax.swing.ImageIcon("./images/High Scores.png")); 
         
+        //Playing main menu music
+        audio.playMenuTheme();
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,6 +43,7 @@ public class StartWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setFocusable(false);
+        setLocation(new java.awt.Point(500, 250));
         setMaximumSize(new java.awt.Dimension(900, 600));
         setMinimumSize(new java.awt.Dimension(900, 600));
         setPreferredSize(new java.awt.Dimension(900, 600));
@@ -74,7 +88,7 @@ public class StartWindow extends javax.swing.JFrame {
 
     private void NewGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewGameActionPerformed
         // TODO add your handling code here:
-        Themes  themes=new Themes();
+        Themes themes=new Themes(audio);
         themes.setParentNode(this);
         this.setVisible(false);
         themes.setVisible(true);

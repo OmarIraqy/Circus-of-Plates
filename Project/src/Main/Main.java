@@ -1,22 +1,33 @@
 package Main;
 
+import controller.AudioController;
 import controller.DiffcultyController;
 import controller.GameController;
 import eg.edu.alexu.csd.oop.game.GameEngine;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import model.Difficulty;
 import view.Game;
+import view.Themes;
 public class Main {
 
     public static void main(String[] args) {
         DiffcultyController diffculty=new DiffcultyController();
-
+        
+        AudioController audio=null;
+        try {
+            audio = new AudioController();
+        } catch (LineUnavailableException ex) {
+            Logger.getLogger(Themes.class.getName()).log(Level.SEVERE, null, ex);
+        }
         JMenuBar menuBar = new JMenuBar();;
 
         JMenu fileMenu = new JMenu("File");
@@ -51,12 +62,12 @@ public class Main {
         GameController gameControl= GameController.getInstance(900, 600);
         ////////////////////////////////////////////////////////////////////////
         
-        final GameEngine.GameController gameController = GameEngine.start("Test Game", new Game(gameControl ,world), menuBar);
+        final GameEngine.GameController gameController = GameEngine.start("Test Game", new Game(gameControl ,world,audio), menuBar);
         //Setting each menu Item its function
         newMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameController.changeWorld(new Game(gameControl ,world));
+//                gameController.changeWorld(new Game(gameControl ,world,audio));
             }
         });
         pauseMenuItem.addActionListener(new ActionListener() {

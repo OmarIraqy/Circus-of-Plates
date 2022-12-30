@@ -17,18 +17,20 @@ public class Game implements World {
     private final StackController stackControl;
     private final GameController gameControl;
     private final Difficulty world;
+    private AudioController audio;
 
-    public Game(GameController gamecontrol, Difficulty world) {
+    public Game(GameController gamecontrol, Difficulty world, AudioController audio) {
         this.gameControl = gamecontrol;
         this.world = world;
+        this.audio = audio;
         factory = new ShapesFactory(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight());
 // control objects 
         control.add(ClownObject.getInstance(gamecontrol.getScreenWidth() / 3, (int) (gamecontrol.getScreenHeight() * 0.65), "./images/clown.png", 10));
-        stackControl = StackController.getInstance(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(), control.get(0), world.getMovingNum() - world.getBombsNum() + 1);
+        stackControl = StackController.getInstance(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(), control.get(0), world.getMovingNum() - world.getBombsNum() + 1, audio);
 // moving objects 
         Random r = new Random();
         for (int i = 0; i < world.getMovingNum(); i++) {
-            moving.add((GameObject) factory.getShape(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(),gamecontrol.getShapes()[r.nextInt(gamecontrol.getShapes().length)]));
+            moving.add((GameObject) factory.getShape(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(), gamecontrol.getShapes()[r.nextInt(gamecontrol.getShapes().length)]));
         }
         for (int i = 0; i < world.getBombsNum(); i++) {
             moving.add((GameObject) factory.getShape(gamecontrol.getScreenWidth(), gamecontrol.getScreenHeight(), "Bomb"));
@@ -54,7 +56,11 @@ public class Game implements World {
                 gameControl.setLives(gameControl.getLives().length() - 1);
             }
         }
-        return !(gameControl.isLost(stackControl));
+        if (gameControl.isLost(stackControl)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

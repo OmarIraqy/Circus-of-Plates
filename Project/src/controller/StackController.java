@@ -17,9 +17,10 @@ public class StackController {
     private HashMap<Integer, Stack<GameObject>> stack;
     private Iterator<HashMap.Entry<Integer, Stack<GameObject>>> entries;
     private int movingSize;
-
-    private StackController(int screenWidth, int screenHeight, GameObject clown, int movingSize) {
-
+    private AudioController audio;
+            
+    private StackController(int screenWidth, int screenHeight, GameObject clown, int movingSize,AudioController audio) {
+        this.audio=audio;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
         this.clown = clown;
@@ -29,9 +30,9 @@ public class StackController {
         this.movingSize = movingSize;
     }
 
-    public static synchronized StackController getInstance(int screenWidth, int screenHeight, GameObject clown, int movingSize) {
+    public static synchronized StackController getInstance(int screenWidth, int screenHeight, GameObject clown, int movingSize,AudioController audio) {
         if (instance == null) {
-            instance = new StackController(screenWidth, screenHeight, clown, movingSize);
+            instance = new StackController(screenWidth, screenHeight, clown, movingSize,audio);
         }
         return instance;
     }
@@ -138,6 +139,7 @@ public class StackController {
                 if (object1.getId() == object2.getId() && object1.getId() == object3.getId()) {
                     modifyLast3(entry.getKey());
                     flags++;
+                    audio.playPointEarned();
                 }
             }
         }
@@ -153,6 +155,7 @@ public class StackController {
             for (int i = 0; i < entry.getValue().size(); i++) {
                 Shapes object = (Shapes) entry.getValue().get(i);
                 if (object.getId() == 100) {
+                    audio.playBomb();
                     for (int j = 0; !entry.getValue().isEmpty(); j++) {
                         entry.getValue().peek().setY(-1 * (int) (Math.random() * screenHeight));
                         entry.getValue().peek().setX((int) (Math.random() * screenWidth));

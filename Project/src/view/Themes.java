@@ -4,12 +4,16 @@
  */
 package view;
 
+import controller.AudioController;
 import controller.DiffcultyController;
 import controller.GameController;
 import eg.edu.alexu.csd.oop.game.GameEngine;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -25,8 +29,9 @@ public class Themes extends javax.swing.JFrame {
     /**
      * Creates new form Themes
      */
-    StartWindow starWindow;
-
+    private StartWindow starWindow;
+    private AudioController audio;
+    
     public StartWindow getParentNode() {
         return starWindow;
     }
@@ -34,13 +39,15 @@ public class Themes extends javax.swing.JFrame {
     public void setParentNode(StartWindow starWindow) {
         this.starWindow = starWindow;
     }
-    public Themes() {
+
+    public Themes(AudioController audio) {
         initComponents();
-       background.setIcon(new javax.swing.ImageIcon("./images/themes.png"));
-       easyLabel.setIcon(new javax.swing.ImageIcon("./images/easy label.png"));
-       mediumLabel.setIcon(new javax.swing.ImageIcon("./images/normal label.png"));
-       HardLabel.setIcon(new javax.swing.ImageIcon("./images/hard label.png"));
-       Back.setIcon(new javax.swing.ImageIcon("./images/back.png"));
+        background.setIcon(new javax.swing.ImageIcon("./images/themes.png"));
+        easyLabel.setIcon(new javax.swing.ImageIcon("./images/easy label.png"));
+        mediumLabel.setIcon(new javax.swing.ImageIcon("./images/normal label.png"));
+        HardLabel.setIcon(new javax.swing.ImageIcon("./images/hard label.png"));
+        Back.setIcon(new javax.swing.ImageIcon("./images/back.png"));
+        this.audio=audio;
     }
 
     /**
@@ -63,6 +70,7 @@ public class Themes extends javax.swing.JFrame {
         background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(500, 250));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Easy.setText("easy");
@@ -111,18 +119,24 @@ public class Themes extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.setVisible(false);
         setup("Easy");
+        audio.stopMenuTheme();
+        audio.playEasyMusic();
     }//GEN-LAST:event_EasyActionPerformed
 
     private void MediumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MediumActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
         setup("Normal");
+        audio.stopMenuTheme();
+        audio.playNormalMusic();
     }//GEN-LAST:event_MediumActionPerformed
 
     private void HardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HardActionPerformed
         // TODO add your handling code here:
         this.setVisible(false);
         setup("Hard");
+        audio.stopMenuTheme();
+        audio.playHardMusic();
     }//GEN-LAST:event_HardActionPerformed
 
     private void BackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackActionPerformed
@@ -134,10 +148,17 @@ public class Themes extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    void setup(String theme){
-    DiffcultyController diffculty=new DiffcultyController();
+    void setup(String theme) {
+        DiffcultyController diffculty = new DiffcultyController();
+        AudioController audio=null;
+        
+        try {
+            audio = new AudioController();
+        } catch (LineUnavailableException ex) {
+            Logger.getLogger(Themes.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        JMenuBar menuBar = new JMenuBar();;
+        JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
         menuBar.add(fileMenu);
@@ -165,18 +186,19 @@ public class Themes extends javax.swing.JFrame {
         fileMenu.add(pauseMenuItem);
         fileMenu.add(resumeMenuItem);
         menuBar.add(fileMenu);
-        
+
         ////////////////////// User set the following by gui ///////////////////
-        Difficulty world=diffculty.getDifficulty(theme);
-        GameController gameControl= GameController.getInstance(900, 600);
+        final Difficulty world = diffculty.getDifficulty(theme);
+        GameController gameControl = GameController.getInstance(900, 600);
         ////////////////////////////////////////////////////////////////////////
-        
-        final GameEngine.GameController gameController = GameEngine.start("Test Game", new Game(gameControl ,world), menuBar);
+
+        GameEngine.GameController gameController = GameEngine.start("Test Game", new Game(gameControl, world, audio), menuBar);
         //Setting each menu Item its function
         newMenuItem.addActionListener(new ActionListener() {
+            
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameController.changeWorld(new Game(gameControl ,world));
+//                gameController.changeWorld(new Game(gameControl, world, audio));
             }
         });
         pauseMenuItem.addActionListener(new ActionListener() {
@@ -197,7 +219,8 @@ public class Themes extends javax.swing.JFrame {
                 System.exit(0);
             }
         });
-}
+    }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -222,12 +245,6 @@ public class Themes extends javax.swing.JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Themes().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

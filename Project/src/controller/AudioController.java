@@ -33,8 +33,8 @@ public class AudioController {
             pointEarned.open(AudioSystem.getAudioInputStream(new File("./audio/PointEarned.wav").getAbsoluteFile()));
             bomb = AudioSystem.getClip();
             bomb.open(AudioSystem.getAudioInputStream(new File("./audio/Bomb.wav").getAbsoluteFile()));
-            gameOver = AudioSystem.getClip();
-            gameOver.open(AudioSystem.getAudioInputStream(new File("./audio/GameOver2.wav").getAbsoluteFile()));
+//            gameOver = AudioSystem.getClip();
+//            gameOver.open(AudioSystem.getAudioInputStream(new File("./audio/GameOver2.wav").getAbsoluteFile()));
         } catch (UnsupportedAudioFileException ex) {
             Logger.getLogger(AudioController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -44,24 +44,24 @@ public class AudioController {
 
     public void playMenuTheme() {
         menuMusic.setFramePosition(0);
-        menuMusic.start();
+        menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     public void playEasyMusic() {
         easyMusic.setFramePosition(0);
-        easyMusic.start();
+        easyMusic.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     public void playNormalMusic() {
         normalMusic.setFramePosition(0);
-        normalMusic.start();
+        normalMusic.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     public void playHardMusic() {
         hardMusic.setFramePosition(0);
-        hardMusic.start();
+        hardMusic.loop(Clip.LOOP_CONTINUOUSLY);
     }
-
+    
     public void playPointEarned() {
         pointEarned.setFramePosition(0);
         pointEarned.start();
