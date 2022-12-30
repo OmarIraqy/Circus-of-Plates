@@ -6,7 +6,7 @@ package controller;
 
 import eg.edu.alexu.csd.oop.game.GameObject;
 
-public class GameController {
+public class GameController  {
 
     private final int screenWidth;
     private final int screenHeight;

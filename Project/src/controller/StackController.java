@@ -41,11 +41,9 @@ public class StackController {
             o.setY((o.getY() + 1));
         }
         refactorShapes(o);
+        handleIntersection(o);
     }
 
-    public void addToStack(GameObject o, int key) {
-        stack.get(key).push(o);
-    }
 
     private boolean intersectLeft(GameObject o1, GameObject o2) {
         return (o1.getHeight() + o1.getY() == o2.getY() && o1.getX() + o1.getWidth() / 2 <= o2.getX() + (o2.getWidth() * 38) / 153 && o1.getX() + o1.getWidth() / 2 >= o2.getX());
